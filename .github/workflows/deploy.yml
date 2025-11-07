@@ -22,14 +22,18 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'  # ✅ Use your Flutter version
+          flutter-version: '3.24.3'  # ✅ Match your local Flutter version
           channel: 'stable'
+
+      # 🧹 Clear old pub cache (important fix)
+      - name: Clear old pub cache
+        run: rm -rf ~/.pub-cache
 
       # 📦 Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      # 🏗️ Build web release
+      # 🏗️ Build Flutter Web (release mode)
       - name: Build Flutter Web
         run: flutter build web --release
 
