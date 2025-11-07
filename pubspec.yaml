@@ -18,7 +18,7 @@ dependencies:
 
   # URL Launcher
   url_launcher: ^6.3.1
-  font_awesome_flutter: ^10.9.0
+  font_awesome_flutter: ^10.5.0
 
 dev_dependencies:
   flutter_test:
