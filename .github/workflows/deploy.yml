@@ -1,13 +1,12 @@
 name: Deploy Flutter Web to GitHub Pages
 
-# ✅ Allow this workflow to push to gh-pages
 permissions:
   contents: write
 
 on:
   push:
     branches:
-      - main  # Runs every time you push to the main branch
+      - main
 
 jobs:
   build:
@@ -22,10 +21,10 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.3'  # ✅ Match your local Flutter version
+          flutter-version: '3.24.3'
           channel: 'stable'
 
-      # 🧹 Clear old pub cache (important fix)
+      # 🧹 Clear old pub cache
       - name: Clear old pub cache
         run: rm -rf ~/.pub-cache
 
@@ -33,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # 🏗️ Build Flutter Web (release mode)
+      # 🏗️ Build web release
       - name: Build Flutter Web
         run: flutter build web --release
 
@@ -44,4 +43,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/web
           publish_branch: gh-pages
-          force_orphan: true  # ensures a clean branch each deploy
+          force_orphan: true
