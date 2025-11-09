@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  open_file: ^3.2.1
 
   # UI / Fonts
   google_fonts: ^6.2.1
@@ -32,3 +33,4 @@ flutter:
 
   assets:
     - assets/images/profile.png
+   

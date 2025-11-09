@@ -27,65 +27,6 @@ class _MyPortfolioAppState extends State<MyPortfolioApp> {
   final GlobalKey _projectsKey = GlobalKey();
   final GlobalKey _certificationsKey = GlobalKey();
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Israr Ahmed • Portfolio',
-      debugShowCheckedModeBanner: false,
-      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        scaffoldBackgroundColor: softBgLight,
-        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black87,
-          elevation: 0,
-        ),
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: softBgDark,
-        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF0B0C10),
-          foregroundColor: Colors.white,
-          elevation: 0,
-        ),
-      ),
-      home: PortfolioPage(
-        neonBlue: neonBlue,
-        neonPurple: neonPurple,
-        isDark: isDark,
-        onToggleTheme: () => setState(() => isDark = !isDark),
-        scrollController: _scrollController,
-        projectsKey: _projectsKey,
-        certificationsKey: _certificationsKey,
-      ),
-    );
-  }
-}
-
-class PortfolioPage extends StatelessWidget {
-  final Color neonBlue;
-  final Color neonPurple;
-  final bool isDark;
-  final VoidCallback onToggleTheme;
-  final ScrollController scrollController;
-  final GlobalKey projectsKey;
-  final GlobalKey certificationsKey;
-
-  const PortfolioPage({
-    super.key,
-    required this.neonBlue,
-    required this.neonPurple,
-    required this.isDark,
-    required this.onToggleTheme,
-    required this.scrollController,
-    required this.projectsKey,
-    required this.certificationsKey,
-  });
-
   Future<void> _openUrl(String url) async {
     final Uri uri = Uri.parse(url);
     try {
@@ -131,6 +72,140 @@ class PortfolioPage extends StatelessWidget {
     }
   }
 
+  Future<void> _openCV() async {
+    const String cvUrl =
+         "https://github.com/IsrarAhmed039/Personal-CV/raw/main/Israr_Ahmed_cv.pdf";
+
+    await _openUrl(cvUrl);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Israr Ahmed • Portfolio',
+      debugShowCheckedModeBanner: false,
+      themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: softBgLight,
+        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.light().textTheme),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black87,
+          elevation: 0,
+        ),
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: softBgDark,
+        textTheme: GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Color(0xFF0B0C10),
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+      ),
+      home: PortfolioPage(
+        neonBlue: neonBlue,
+        neonPurple: neonPurple,
+        isDark: isDark,
+        onToggleTheme: () => setState(() => isDark = !isDark),
+        scrollController: _scrollController,
+        projectsKey: _projectsKey,
+        certificationsKey: _certificationsKey,
+        openCV: _openCV,
+        openWhatsApp: _openWhatsApp,
+        openEmail: _email,
+        openUrl: _openUrl,
+      ),
+    );
+  }
+}
+
+// --------------------------
+// PORTFOLIO PAGE
+// --------------------------
+class PortfolioPage extends StatelessWidget {
+  final Color neonBlue;
+  final Color neonPurple;
+  final bool isDark;
+  final VoidCallback onToggleTheme;
+  final ScrollController scrollController;
+  final GlobalKey projectsKey;
+  final GlobalKey certificationsKey;
+  final Future<void> Function() openCV;
+  final Future<void> Function() openWhatsApp;
+  final Future<void> Function() openEmail;
+  final Future<void> Function(String) openUrl;
+
+  const PortfolioPage({
+    super.key,
+    required this.neonBlue,
+    required this.neonPurple,
+    required this.isDark,
+    required this.onToggleTheme,
+    required this.scrollController,
+    required this.projectsKey,
+    required this.certificationsKey,
+    required this.openCV,
+    required this.openWhatsApp,
+    required this.openEmail,
+    required this.openUrl,
+  });
+
+  Widget _sectionTitle(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w700,
+          color: isDark ? Colors.white : Colors.black87,
+        ),
+      ),
+    );
+  }
+
+  Widget _contactRow(
+      {required IconData icon,
+      required String label,
+      required Color color,
+      VoidCallback? onTap,
+      bool neon = false}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          neon
+              ? Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(colors: [neonPurple, neonBlue]),
+                    boxShadow: [
+                      BoxShadow(
+                          color: neonPurple.withOpacity(0.24),
+                          blurRadius: 16,
+                          spreadRadius: 3),
+                      BoxShadow(
+                          color: neonBlue.withOpacity(0.18),
+                          blurRadius: 26,
+                          spreadRadius: 6),
+                    ],
+                  ),
+                  child: Icon(icon, color: Colors.white, size: 16),
+                )
+              : Icon(icon, size: 16, color: color),
+          const SizedBox(width: 8),
+          Flexible(
+              child: Text(label, style: TextStyle(color: color, fontSize: 13))),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Gradient mainGradient = LinearGradient(
@@ -165,8 +240,9 @@ class PortfolioPage extends StatelessWidget {
                 );
               }
             },
-            child:
-                Text('Projects', style: TextStyle(color: isDark ? Colors.white70 : Colors.black87)),
+            child: Text('Projects',
+                style:
+                    TextStyle(color: isDark ? Colors.white70 : Colors.black87)),
           ),
           TextButton(
             onPressed: () {
@@ -180,12 +256,20 @@ class PortfolioPage extends StatelessWidget {
               }
             },
             child: Text('Certifications',
-                style: TextStyle(color: isDark ? Colors.white70 : Colors.black87)),
+                style:
+                    TextStyle(color: isDark ? Colors.white70 : Colors.black87)),
+          ),
+          IconButton(
+            tooltip: 'Download CV',
+            onPressed: openCV,
+            icon: const Icon(Icons.download_rounded),
+            color: isDark ? Colors.white : Colors.black87,
           ),
           IconButton(
             tooltip: 'Toggle theme',
             onPressed: onToggleTheme,
-            icon: Icon(isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined),
+            icon: Icon(
+                isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined),
             color: isDark ? Colors.white : Colors.black87,
           ),
           const SizedBox(width: 8),
@@ -208,7 +292,8 @@ class PortfolioPage extends StatelessWidget {
         child: SafeArea(
           child: SingleChildScrollView(
             controller: scrollController,
-            padding: EdgeInsets.symmetric(horizontal: isWide ? 72 : 20, vertical: 28),
+            padding:
+                EdgeInsets.symmetric(horizontal: isWide ? 72 : 20, vertical: 28),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -218,18 +303,21 @@ class PortfolioPage extends StatelessWidget {
                     neonPurple: neonPurple,
                     mainGradient: mainGradient,
                     isWide: isWide,
-                    openWhatsApp: _openWhatsApp,
-                    isDark: isDark, // pass current theme
+                    openWhatsApp: openWhatsApp,
+                    isDark: isDark,
                   ),
                 ),
                 const SizedBox(height: 20),
-                _sectionTitle('About Me', isDark),
+                _sectionTitle('About Me'),
                 Text(
                   "Flutter Developer focused on performant, beautiful cross-platform experiences. I build apps with clean architecture, thoughtful UX, and production-ready code.",
-                  style: TextStyle(fontSize: 14, height: 1.4, color: isDark ? Colors.white70 : Colors.black87),
+                  style: TextStyle(
+                      fontSize: 14,
+                      height: 1.4,
+                      color: isDark ? Colors.white70 : Colors.black87),
                 ),
                 const SizedBox(height: 18),
-                _sectionTitle('Skills', isDark),
+                _sectionTitle('Skills'),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -244,7 +332,7 @@ class PortfolioPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 20),
-                _sectionTitle('Contact', isDark),
+                _sectionTitle('Contact'),
                 const SizedBox(height: 6),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -253,21 +341,21 @@ class PortfolioPage extends StatelessWidget {
                       icon: Icons.email_outlined,
                       label: 'israrahmedgabole@gmail.com',
                       color: isDark ? Colors.white70 : Colors.black87,
-                      onTap: _email,
+                      onTap: openEmail,
                     ),
                     const SizedBox(height: 6),
                     _contactRow(
                       icon: Icons.phone_android,
                       label: '+92 307 8340514',
                       color: isDark ? Colors.white70 : Colors.black87,
-                      onTap: () => _openUrl('tel:+923078340514'),
+                      onTap: () => openUrl('tel:+923078340514'),
                     ),
                     const SizedBox(height: 6),
                     _contactRow(
                       icon: FontAwesomeIcons.whatsapp,
                       label: 'Chat on WhatsApp',
                       color: isDark ? Colors.white70 : Colors.black87,
-                      onTap: _openWhatsApp,
+                      onTap: openWhatsApp,
                       neon: true,
                     ),
                     const SizedBox(height: 6),
@@ -275,82 +363,84 @@ class PortfolioPage extends StatelessWidget {
                       icon: Icons.person,
                       label: 'LinkedIn Profile',
                       color: isDark ? Colors.white70 : Colors.black87,
-                      onTap: () => _openUrl('https://www.linkedin.com/in/israrahmed039/'),
+                      onTap: () => openUrl('https://www.linkedin.com/in/israrahmed039/'),
                     ),
                     const SizedBox(height: 6),
                     _contactRow(
                       icon: Icons.code,
                       label: 'GitHub Profile',
                       color: isDark ? Colors.white70 : Colors.black87,
-                      onTap: () => _openUrl('https://github.com/IsrarAhmed039/'),
+                      onTap: () => openUrl('https://github.com/IsrarAhmed039/'),
                     ),
                     const SizedBox(height: 10),
-                    _NeonButton(
-                      gradient: mainGradient,
-                      onTap: _email,
-                      child: const Text('Send Email', style: TextStyle(fontWeight: FontWeight.w600)),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 28),
-                _sectionTitle('Projects', isDark),
+                _sectionTitle('Projects'),
                 const SizedBox(height: 10),
                 _ProjectsGrid(
-                  key: projectsKey,
-                  gradient: mainGradient,
-                  isDark: isDark,
-                  openUrl: _openUrl,
-                ),
+                    gradient: mainGradient, isDark: isDark, openUrl: openUrl, key: projectsKey),
                 const SizedBox(height: 28),
-                _sectionTitle('Certifications', isDark),
+                _sectionTitle('Certifications'),
                 const SizedBox(height: 10),
                 _CertificationsGrid(
-                  key: certificationsKey,
-                  gradient: mainGradient,
-                  isDark: isDark,
-                  openUrl: _openUrl,
-                ),
-                const SizedBox(height: 28),
-                Divider(color: isDark ? Colors.white12 : Colors.black12),
+                    gradient: mainGradient,
+                    isDark: isDark,
+                    openUrl: openUrl,
+                    key: certificationsKey),
+                
+                // --------------------------
+                // FOOTER START (with WhatsApp)
+                // --------------------------
+                const SizedBox(height: 40),
+                Divider(color: Colors.white24, thickness: 1),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('© ${DateTime.now().year} Israr Ahmed',
-                        style: TextStyle(color: isDark ? Colors.white60 : Colors.black54)),
-                    Row(
-                      children: [
-                        _IconGlowButton(
-                          icon: FontAwesomeIcons.whatsapp,
-                          gradient: mainGradient,
-                          onTap: _openWhatsApp,
-                          isDark: isDark,
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        '© ${DateTime.now().year} Israr Ahmed',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark ? Colors.white54 : Colors.black54,
                         ),
-                        const SizedBox(width: 6),
-                        _IconGlowButton(
-                          icon: Icons.person,
-                          gradient: mainGradient,
-                          onTap: () => _openUrl('https://www.linkedin.com/in/israrahmed039/'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 6),
-                        _IconGlowButton(
-                          icon: Icons.code,
-                          gradient: mainGradient,
-                          onTap: () => _openUrl('https://github.com/IsrarAhmed039/'),
-                          isDark: isDark,
-                        ),
-                        const SizedBox(width: 6),
-                        _IconGlowButton(
-                          icon: Icons.mail_outline,
-                          gradient: mainGradient,
-                          onTap: _email,
-                          isDark: isDark,
-                        ),
-                      ],
-                    )
-                  ],
+                      ),
+                      const SizedBox(height: 6),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 16,
+                        children: [
+                          _FooterIcon(
+                              icon: FontAwesomeIcons.linkedin,
+                              label: 'LinkedIn',
+                              color: Colors.blueAccent,
+                              onTap: () => openUrl('https://www.linkedin.com/in/israrahmed039/')),
+                          _FooterIcon(
+                              icon: FontAwesomeIcons.github,
+                              label: 'GitHub',
+                              color: Colors.white,
+                              onTap: () => openUrl('https://github.com/IsrarAhmed039/')),
+                          _FooterIcon(
+                              icon: Icons.email_outlined,
+                              label: 'Email',
+                              color: Colors.redAccent,
+                              onTap: openEmail),
+                          _FooterIcon(
+                              icon: FontAwesomeIcons.whatsapp,
+                              label: 'WhatsApp',
+                              color: Colors.greenAccent,
+                              onTap: openWhatsApp),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
                 ),
+                // --------------------------
+                // FOOTER END
+                // --------------------------
+
+                const SizedBox(height: 28),
               ],
             ),
           ),
@@ -358,49 +448,70 @@ class PortfolioPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _contactRow({
-    required IconData icon,
-    required String label,
-    required Color color,
-    VoidCallback? onTap,
-    bool neon = false,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          neon
-              ? Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(colors: [neonPurple, neonBlue]),
-                    boxShadow: [
-                      BoxShadow(color: neonPurple.withOpacity(0.24), blurRadius: 16, spreadRadius: 3),
-                      BoxShadow(color: neonBlue.withOpacity(0.18), blurRadius: 26, spreadRadius: 6),
-                    ],
-                  ),
-                  child: Icon(icon, color: Colors.white, size: 16),
+// --------------------------
+// FOOTER ICON WITH HOVER
+// --------------------------
+class _FooterIcon extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _FooterIcon({
+    super.key,
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  State<_FooterIcon> createState() => _FooterIconState();
+}
+
+class _FooterIconState extends State<_FooterIcon> {
+  bool _hovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isWeb = (Theme.of(context).platform == TargetPlatform.windows ||
+        Theme.of(context).platform == TargetPlatform.macOS ||
+        Theme.of(context).platform == TargetPlatform.linux ||
+        Theme.of(context).platform == TargetPlatform.fuchsia);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: _hovering && isWeb
+              ? BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      color: widget.color.withOpacity(0.6),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    )
+                  ],
+                  borderRadius: BorderRadius.circular(4),
                 )
-              : Icon(icon, size: 16, color: color),
-          const SizedBox(width: 8),
-          Flexible(child: Text(label, style: TextStyle(color: color, fontSize: 13))),
-        ],
-      ),
-    );
-  }
-
-  Widget _sectionTitle(String text, bool isDark) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          color: isDark ? Colors.white : Colors.black87,
+              : null,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(widget.icon, size: 16, color: widget.color),
+              const SizedBox(width: 4),
+              Text(
+                widget.label,
+                style: const TextStyle(fontSize: 13, color: Colors.white70),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -478,30 +589,6 @@ class _HeroArea extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// --------------------------
-// NEON BUTTON
-// --------------------------
-class _NeonButton extends StatelessWidget {
-  final Widget child;
-  final Gradient gradient;
-  final VoidCallback onTap;
-
-  const _NeonButton({super.key, required this.child, required this.gradient, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(26),
-      child: Ink(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 14),
-        decoration: BoxDecoration(gradient: gradient, borderRadius: BorderRadius.circular(26)),
-        child: DefaultTextStyle(style: const TextStyle(color: Colors.white, fontSize: 13), child: child),
-      ),
     );
   }
 }
@@ -589,12 +676,22 @@ class _ProjectsGrid extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(project['title']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                Text(project['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
                 const SizedBox(height: 6),
                 Expanded(
-                  child: Text(project['desc']!,
-                      style: const TextStyle(color: Colors.white70, fontSize: 13), overflow: TextOverflow.fade),
+                  child: Text(project['desc']!, style: const TextStyle(fontSize: 13, color: Colors.white70)),
                 ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Visit Project', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.arrow_forward, color: Colors.white, size: 16)
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -618,14 +715,14 @@ class _CertificationsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final certs = [
       {
-        'title': 'Flutter & Dart (6-Month Certificate)',
-        'desc': 'Gained hands-on experience building cross-platform mobile apps with Flutter & Dart, including UI design, state management, and API integratio.',
-        'url': 'https://www.linkedin.com/posts/israrahmed039_flutter-dart-mobileappdevelopment-share-7391189423088050176-DvIu?utm_source=share&utm_medium=member_desktop&rcm=ACoAADxfw5UBvQdJ1CQTYSAQj8lP0CcXsCsO0HU',
+        'title': 'Flutter & Dart 6 Months Certificate',
+        'desc': 'Completed a 6-month intensive course in Flutter & Dart development.',
+        'url': 'https://drive.google.com/file/d/1AabcXYZ/view?usp=sharing'
       },
       {
-        'title': 'Flutter & Dart (institute of SMIT)',
-        'desc': 'Completed a 6-month intensive Flutter & Dart program, mastering cross-platform app development and clean architecture',
-        'url': 'https://www.linkedin.com/posts/israrahmed039_flutter-dart-mobileappdevelopment-share-7391189423088050176-DvIu?utm_source=share&utm_medium=member_desktop&rcm=ACoAADxfw5UBvQdJ1CQTYSAQj8lP0CcXsCsO0HU',
+        'title': 'Firebase Development Certificate',
+        'desc': 'Certificate of Firebase backend integration with Flutter apps.',
+        'url': 'https://drive.google.com/file/d/2BxyzABC/view?usp=sharing'
       },
     ];
 
@@ -663,48 +760,27 @@ class _CertificationsGrid extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(cert['title']!, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                Text(cert['title']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white)),
                 const SizedBox(height: 6),
                 Expanded(
-                  child: Text(cert['desc']!,
-                      style: const TextStyle(color: Colors.white70, fontSize: 13), overflow: TextOverflow.fade),
+                  child: Text(cert['desc']!, style: const TextStyle(fontSize: 13, color: Colors.white70)),
                 ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('View Certificate', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.arrow_forward, color: Colors.white, size: 16)
+                    ],
+                  ),
+                )
               ],
             ),
           ),
         );
       },
-    );
-  }
-}
-
-// --------------------------
-// ICON GLOW BUTTON
-// --------------------------
-class _IconGlowButton extends StatelessWidget {
-  final IconData icon;
-  final Gradient gradient;
-  final VoidCallback onTap;
-  final bool isDark;
-
-  const _IconGlowButton({super.key, required this.icon, required this.gradient, required this.onTap, required this.isDark});
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Ink(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: gradient,
-          boxShadow: [
-            BoxShadow(color: isDark ? Colors.white12 : Colors.black26, blurRadius: 6, spreadRadius: 1),
-          ],
-        ),
-        child: Icon(icon, size: 16, color: isDark ? Colors.white : Colors.black87),
-      ),
     );
   }
 }
