@@ -218,63 +218,100 @@ class PortfolioPage extends StatelessWidget {
     final bool isWide = size.width > 900;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Text(
+  appBar: AppBar(
+  backgroundColor: Colors.transparent,
+  elevation: 0,
+  title: LayoutBuilder(
+    builder: (context, constraints) {
+      double fontSize;
+      if (constraints.maxWidth > 900) {
+        fontSize = 24;
+      } else if (constraints.maxWidth > 600) {
+        fontSize = 20;
+      } else {
+        fontSize = 16;
+      }
+      return FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
           'Israr Ahmed',
           style: TextStyle(
             fontWeight: FontWeight.w700,
+            fontSize: fontSize,
             color: isDark ? Colors.white : Colors.black87,
           ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              final ctx = projectsKey.currentContext;
-              if (ctx != null) {
-                Scrollable.ensureVisible(
-                  ctx,
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.easeInOut,
-                );
-              }
-            },
-            child: Text('Projects',
-                style:
-                    TextStyle(color: isDark ? Colors.white70 : Colors.black87)),
-          ),
-          TextButton(
-            onPressed: () {
-              final ctx = certificationsKey.currentContext;
-              if (ctx != null) {
-                Scrollable.ensureVisible(
-                  ctx,
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.easeInOut,
-                );
-              }
-            },
-            child: Text('Certifications',
-                style:
-                    TextStyle(color: isDark ? Colors.white70 : Colors.black87)),
-          ),
-          IconButton(
-            tooltip: 'Download CV',
-            onPressed: openCV,
-            icon: const Icon(Icons.download_rounded),
-            color: isDark ? Colors.white : Colors.black87,
-          ),
-          IconButton(
-            tooltip: 'Toggle theme',
-            onPressed: onToggleTheme,
-            icon: Icon(
-                isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined),
-            color: isDark ? Colors.white : Colors.black87,
-          ),
-          const SizedBox(width: 8),
-        ],
+      );
+    },
+  ),
+  actions: [
+    ConstrainedBox(
+      constraints: const BoxConstraints(maxWidth: 500),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            TextButton(
+              onPressed: () {
+                final ctx = projectsKey.currentContext;
+                if (ctx != null) {
+                  Scrollable.ensureVisible(
+                    ctx,
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: Text(
+                'Projects',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width > 800 ? 14 : 12,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                final ctx = certificationsKey.currentContext;
+                if (ctx != null) {
+                  Scrollable.ensureVisible(
+                    ctx,
+                    duration: const Duration(milliseconds: 600),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              },
+              child: Text(
+                'Certifications',
+                style: TextStyle(
+                  fontSize: MediaQuery.of(context).size.width > 800 ? 14 : 12,
+                  color: isDark ? Colors.white70 : Colors.black87,
+                ),
+              ),
+            ),
+            IconButton(
+              tooltip: 'Download CV',
+              onPressed: openCV,
+              icon: const Icon(Icons.download_rounded),
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+            IconButton(
+              tooltip: 'Toggle theme',
+              onPressed: onToggleTheme,
+              icon: Icon(
+                  isDark ? Icons.wb_sunny_outlined : Icons.dark_mode_outlined),
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
       ),
+    ),
+  ],
+),
+
+
+
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -715,14 +752,14 @@ class _CertificationsGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final certs = [
       {
-        'title': 'Flutter & Dart 6 Months Certificate',
+        'title': 'Mobile App Development ( Bano Qabil IT Training Institute)',
         'desc': 'Completed a 6-month intensive course in Flutter & Dart development.',
-        'url': 'https://drive.google.com/file/d/1AabcXYZ/view?usp=sharing'
+        'url': 'https://www.linkedin.com/posts/israrahmed039_flutter-dart-mobileappdevelopment-share-7391189423088050176-DvIu?utm_source=share&utm_medium=member_desktop&rcm=ACoAADxfw5UBvQdJ1CQTYSAQj8lP0CcXsCsO0HU'
       },
       {
-        'title': 'Firebase Development Certificate',
-        'desc': 'Certificate of Firebase backend integration with Flutter apps.',
-        'url': 'https://drive.google.com/file/d/2BxyzABC/view?usp=sharing'
+        'title': 'Mobile App Development-Flutter & Dart (SMIT Institute)',
+        'desc': 'Successfully completed a comprehensive Flutter and Dart course, gaining expertise in cross-platform mobile application development..',
+        'url': 'https://www.linkedin.com/posts/israrahmed039_flutter-dart-mobileappdevelopment-share-7391189423088050176-DvIu/?utm_source=share&utm_medium=member_desktop&rcm=ACoAADxfw5UBvQdJ1CQTYSAQj8lP0CcXsCsO0HU'
       },
     ];
 
